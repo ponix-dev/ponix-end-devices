@@ -1,0 +1,4 @@
+[tools]
+rust = "latest"
+just = "latest"
+buf = "latest"
