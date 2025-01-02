@@ -1,8 +1,6 @@
-basedir := `pwd`
-artifacts_dir := basedir / "artifacts"
-
-board:
-    lsusb | grep UART
+dev-up:
+    #!/usr/bin/env bash
+    . $HOME/export-esp.sh
 
 init_probe_rs:
     #!/usr/bin/env bash
@@ -24,13 +22,5 @@ init_esp:
 
 init: init_probe_rs init_esp
 
-dev-up:
-    #!/usr/bin/env bash
-    . $HOME/export-esp.sh
-
-stack-up:
-    docker compose -f docker-compose.yaml up -d
-
-stack-down:
-    docker compose -f docker-compose.yaml down
-
+board:
+    lsusb | grep UART
