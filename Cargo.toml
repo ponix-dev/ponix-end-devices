@@ -1,8 +1,4 @@
 [workspace]
-
 resolver = "2"
 
-members = ["services/peripheral_esp32s3"]
-
-# [workspace.dependencies]
-# telemetry = { path = "libs/telemetry" }
+members = ["flow_sensor"]
