@@ -2,22 +2,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "preLaunchTask": "${defaultBuildTask}",
             "type": "probe-rs-debug",
             "request": "launch",
-            "name": "Launch esp32s3",
-            "cwd": "${workspaceFolder}",
-            "chip": "esp32s3",
+            "name": "Flash and Debug",
             "flashingConfig": {
                 "flashingEnabled": true,
-                "haltAfterReset": true,
-                "formatOptions": {
-                    "binaryFormat": "idf"
-                }
             },
+            "chip": "nRF52840_xxAA",
             "coreConfigs": [
                 {
-                    "coreIndex": 0,
-                    "programBinary": "target/xtensa-esp32s3-none-elf/debug/peripheral_esp32s3",
+                    "programBinary": "target/thumbv7em-none-eabi/release/ponix-end-devices"
                 }
             ]
         }
