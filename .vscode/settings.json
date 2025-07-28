@@ -1,3 +1,4 @@
 {
-    "rust-analyzer.rustc.source": "/home/srall/.local/share/mise/shims/rustc"
+    "rust-analyzer.cargo.target": "thumbv7em-none-eabihf",
+    "rust-analyzer.checkOnSave.allTargets": false
 }

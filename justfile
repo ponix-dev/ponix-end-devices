@@ -1,26 +1,5 @@
-dev-up:
-    #!/usr/bin/env bash
-    . $HOME/export-esp.sh
+flash:
+    cargo run --release
 
-init_probe_rs:
-    #!/usr/bin/env bash
-    curl --proto '=https' --tlsv1.2 -LsSf https://github.com/probe-rs/probe-rs/releases/latest/download/probe-rs-tools-installer.sh | sh
-    sudo usermod -a -G dialout $USER
-    sudo cp ./utils/69-probe-rs.rules /etc/udev/rules.d
-    sudo udevadm control --reload
-    sudo udevadm trigger
-
-init_esp:
-    #!/usr/bin/env bash
-    cargo install espup
-    espup install
-    . $HOME/export-esp.sh
-    sudo apt install -y pkg-config libusb-1.0-0-dev libftdi1-dev
-    sudo apt-get -y install libudev-dev
-    cargo install esp-generate
-    cargo install espflash
-
-init: init_probe_rs init_esp
-
-board:
-    lsusb | grep UART
+build:
+    cargo build --release

@@ -9,12 +9,14 @@ use {defmt_rtt as _, panic_probe as _};
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {
     let p = embassy_nrf::init(Default::default());
-    let mut led = Output::new(p.P0_13, Level::Low, OutputDrive::Standard);
+    let mut led = Output::new(p.P1_03, Level::Low, OutputDrive::Standard);
 
     loop {
+        defmt::info!("LED turning on");
         led.set_high();
-        Timer::after_millis(300).await;
+        Timer::after_millis(1000).await;
+        defmt::info!("LED turning off");
         led.set_low();
-        Timer::after_millis(300).await;
+        Timer::after_millis(1000).await;
     }
 }
