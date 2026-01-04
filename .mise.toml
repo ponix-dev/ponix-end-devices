@@ -1,3 +1,10 @@
 [tools]
 rust = "latest"
-just = "latest"
+
+[tasks.build]
+description = "Build the project in release mode"
+run = "cargo build --release"
+
+[tasks.flash]
+description = "Build and flash to device"
+run = "cargo run --release"

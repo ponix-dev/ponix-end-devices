@@ -5,8 +5,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ### Build & Flash
-- `just build` - Build the project in release mode
-- `just flash` - Build and flash to device (runs `cargo run --release`)
+- `mise run build` - Build the project in release mode
+- `mise run flash` - Build and flash to device (runs `cargo run --release`)
 - `cargo build` - Build in debug mode
 - `cargo build --release` - Build in release mode
 - `cargo run` - Build and flash debug build using probe-rs
@@ -53,7 +53,7 @@ This is an embedded Rust project for nRF52840 microcontrollers using the Embassy
 - `memory.x` - Memory layout definition
 - `build.rs` - Build script to handle memory.x and linker configuration
 - `.cargo/config.toml` - Cargo configuration for target and runner
-- `justfile` - Common commands shortcuts
+- `.mise.toml` - Mise configuration with tools and task shortcuts
 
 ### Key Development Patterns
 
