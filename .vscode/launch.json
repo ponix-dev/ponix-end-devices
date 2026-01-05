@@ -2,17 +2,71 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "preLaunchTask": "${defaultBuildTask}",
             "type": "probe-rs-debug",
             "request": "launch",
-            "name": "Flash and Debug",
+            "name": "temp-humidity-rp2350",
+            "cwd": "${workspaceFolder}/crates/temp-humidity-rp2350",
+            "chip": "RP2350",
             "flashingConfig": {
-                "flashingEnabled": true,
+                "flashingEnabled": true
             },
-            "chip": "nRF52840_xxAA",
             "coreConfigs": [
                 {
-                    "programBinary": "target/thumbv7em-none-eabi/release/ponix-end-devices"
+                    "programBinary": "${workspaceFolder}/target/thumbv8m.main-none-eabihf/release/temp-humidity-rp2350",
+                    "rttEnabled": true,
+                    "rttChannelFormats": [
+                        {
+                            "channelNumber": 0,
+                            "dataFormat": "Defmt",
+                            "showTimestamps": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "probe-rs-debug",
+            "request": "launch",
+            "name": "flow-rp2040",
+            "cwd": "${workspaceFolder}/crates/flow-rp2040",
+            "chip": "RP2040",
+            "flashingConfig": {
+                "flashingEnabled": true
+            },
+            "coreConfigs": [
+                {
+                    "programBinary": "${workspaceFolder}/target/thumbv6m-none-eabi/release/flow-rp2040",
+                    "rttEnabled": true,
+                    "rttChannelFormats": [
+                        {
+                            "channelNumber": 0,
+                            "dataFormat": "Defmt",
+                            "showTimestamps": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "probe-rs-debug",
+            "request": "launch",
+            "name": "weather-nrf52840",
+            "cwd": "${workspaceFolder}/crates/weather-nrf52840",
+            "chip": "nRF52840_xxAA",
+            "flashingConfig": {
+                "flashingEnabled": true
+            },
+            "coreConfigs": [
+                {
+                    "programBinary": "${workspaceFolder}/target/thumbv7em-none-eabi/release/weather-nrf52840",
+                    "rttEnabled": true,
+                    "rttChannelFormats": [
+                        {
+                            "channelNumber": 0,
+                            "dataFormat": "Defmt",
+                            "showTimestamps": true
+                        }
+                    ]
                 }
             ]
         }

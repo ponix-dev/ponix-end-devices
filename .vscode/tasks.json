@@ -2,22 +2,39 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "cargo build",
+            "label": "build temp-humidity-rp2040",
             "type": "shell",
             "command": "cargo",
-            "args": [
-                "build",
-                "--release"
-            ],
-            "problemMatcher": [
-                "$rustc"
-            ],
+            "args": ["build", "--release"],
+            "options": {
+                "cwd": "${workspaceFolder}/crates/temp-humidity-rp2040"
+            },
+            "problemMatcher": ["$rustc"],
+            "group": "build"
+        },
+        {
+            "label": "build flow-rp2040",
+            "type": "shell",
+            "command": "cargo",
+            "args": ["build", "--release"],
+            "options": {
+                "cwd": "${workspaceFolder}/crates/flow-rp2040"
+            },
+            "problemMatcher": ["$rustc"],
+            "group": "build"
+        },
+        {
+            "label": "build weather-nrf52840",
+            "type": "shell",
+            "command": "cargo",
+            "args": ["build", "--release"],
+            "options": {
+                "cwd": "${workspaceFolder}/crates/weather-nrf52840"
+            },
+            "problemMatcher": ["$rustc"],
             "group": {
                 "kind": "build",
                 "isDefault": true
-            },
-            "presentation": {
-                "reveal": "always"
             }
         }
     ]

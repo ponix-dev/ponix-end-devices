@@ -1,10 +1,41 @@
 [tools]
 rust = "latest"
 
+[tools."github:probe-rs/probe-rs"]
+version = "latest"
+
+[tools."github:probe-rs/probe-rs".platforms]
+linux-x64 = { asset_pattern = "probe-rs-tools-x86_64-unknown-linux-gnu.tar.xz" }
+linux-arm64 = { asset_pattern = "probe-rs-tools-aarch64-unknown-linux-gnu.tar.xz" }
+macos-arm64 = { asset_pattern = "probe-rs-tools-aarch64-apple-darwin.tar.xz" }
+macos-x64 = { asset_pattern = "probe-rs-tools-x86_64-apple-darwin.tar.xz" }
+
 [tasks.build]
-description = "Build the project in release mode"
-run = "cargo build --release"
+description = "Build a project in release mode"
+usage = 'arg "project"'
+run = "cd ${usage_project?} && cargo build --release"
 
 [tasks.flash]
-description = "Build and flash to device"
-run = "cargo run --release"
+description = "Build and flash a project via probe-rs"
+usage = 'arg "project"'
+run = "cd ${usage_project?} && cargo run --release"
+
+[tasks.check]
+description = "Check a project"
+usage = 'arg "project"'
+run = "cd ${usage_project?} && cargo check"
+
+[tasks.clippy]
+description = "Run clippy on a project"
+usage = 'arg "project"'
+run = "cd ${usage_project?} && cargo clippy"
+
+[tasks.uf2]
+description = "Build and convert to UF2 (for Pico 2 W boards)"
+usage = 'arg "project"'
+run = '''
+cd ${usage_project?}
+cargo build --release
+picotool uf2 convert target/thumbv8m.main-none-eabihf/release/${usage_project?} -t elf ${usage_project?}.uf2 --family rp2350-arm-s
+echo "Created ${usage_project?}/${usage_project?}.uf2"
+'''

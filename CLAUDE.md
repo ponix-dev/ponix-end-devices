@@ -5,60 +5,80 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ### Build & Flash
-- `mise run build` - Build the project in release mode
-- `mise run flash` - Build and flash to device (runs `cargo run --release`)
-- `cargo build` - Build in debug mode
-- `cargo build --release` - Build in release mode
-- `cargo run` - Build and flash debug build using probe-rs
-- `cargo run --release` - Build and flash release build using probe-rs
+Each project is independent. Build from the project directory:
 
-### Development
-- `cargo check` - Check code without building
-- `cargo clippy` - Run linting
-- `DEFMT_LOG=trace cargo run` - Run with trace-level logging (already set in .cargo/config.toml)
+```bash
+cd blink-rp2350 && cargo build --release
+cd temp-humidity-rp2350 && cargo build --release
+cd weather-nrf52840 && cargo build --release
+```
+
+### UF2 Conversion (for Pico boards)
+```bash
+picotool uf2 convert target/thumbv8m.main-none-eabihf/release/blink-rp2350 -t elf blink-rp2350.uf2 --family rp2350-arm-s
+```
 
 ## Architecture Overview
 
-This is an embedded Rust project for nRF52840 microcontrollers using the Embassy async framework. The codebase follows a no_std embedded architecture pattern.
+This repository contains multiple independent embedded Rust projects using the Embassy async framework. Each project targets a specific microcontroller and is built independently (no Cargo workspace).
+
+### Repository Structure
+
+```
+ponix-end-devices/
+├── blink-rp2350/         # Pi Pico 2 W - onboard LED blink (CYW43)
+├── temp-humidity-rp2350/ # Pi Pico 2 W - temp/humidity sensor
+├── weather-nrf52840/     # RAK4631/nRF52840 - LoRaWAN weather sensor
+└── .mise.toml            # Task runner configuration
+```
+
+### Naming Convention
+Projects follow `feature-arch` pattern:
+- `blink-rp2350` - blink feature on RP2350
+- `temp-humidity-rp2350` - temp/humidity feature on RP2350
+- `weather-nrf52840` - weather feature on nRF52840
+
+### Project Details
+
+#### blink-rp2350
+- **Board**: Raspberry Pi Pico 2 W
+- **Target**: `thumbv8m.main-none-eabihf` (Cortex-M33)
+- **Features**: Onboard LED via CYW43 WiFi chip
+- **Embassy**: Git version (for latest CYW43 API)
+
+#### temp-humidity-rp2350
+- **Board**: Raspberry Pi Pico 2 W
+- **Target**: `thumbv8m.main-none-eabihf` (Cortex-M33)
+- **Embassy**: Published crates.io versions
+
+#### weather-nrf52840
+- **Board**: RAK4631 WisBlock
+- **Target**: `thumbv7em-none-eabi` (Cortex-M4F)
+- **Features**: LoRaWAN (US915), SX1262 radio
+- **Embassy**: Published crates.io versions (compatible with lora-rs)
 
 ### Key Components
 
-1. **Embassy Framework** - Async embedded runtime and HAL
-   - `embassy-executor` - Async task executor
-   - `embassy-nrf` - Hardware abstraction for nRF52840
-   - `embassy-time` - Async timers and delays
-   - `embassy-net` - Networking stack (TCP/IP, DHCP)
-   - `embassy-usb` - USB device support
+1. **Embassy Framework** - Async embedded runtime
+   - `embassy-executor` - Task executor
+   - `embassy-nrf` - nRF52840 HAL
+   - `embassy-rp` - RP2350 HAL
+   - `embassy-time` - Async timers
 
-2. **Memory Configuration**
-   - Flash: 1MB starting at 0x00000000
-   - RAM: 256KB starting at 0x20000000
-   - Configured in `memory.x` (copied by build.rs)
-   - Alternative configuration for SoftDevice S140 included but commented out
+2. **Per-Project Configuration**
+   - Each project has its own `Cargo.toml` with all dependencies
+   - Each project has its own `.cargo/config.toml` with target and runner
+   - Each project has its own `memory.x` linker script
+   - Each project has its own `Cargo.lock`
 
-3. **Target Configuration**
-   - Target: `thumbv7em-none-eabi` (Cortex-M4F)
-   - Chip: nRF52840_xxAA
-   - Runner: probe-rs for flashing and debugging
-   - Configured in `.cargo/config.toml`
-
-4. **Logging**
+3. **Logging**
    - Uses `defmt` for efficient embedded logging
    - RTT (Real-Time Transfer) for debug output
-   - Default log level: trace
-
-### Project Structure
-
-- `src/main.rs` - Entry point with async main task
-- `memory.x` - Memory layout definition
-- `build.rs` - Build script to handle memory.x and linker configuration
-- `.cargo/config.toml` - Cargo configuration for target and runner
-- `.mise.toml` - Mise configuration with tools and task shortcuts
 
 ### Key Development Patterns
 
 1. **No Standard Library** - Uses `#![no_std]` and `#![no_main]`
 2. **Async/Await** - Embassy provides async runtime for embedded
-3. **Hardware Abstraction** - Embassy HAL provides safe abstractions over nRF peripherals
-4. **Static Memory** - No heap allocation, uses `static_cell` for static allocations
-5. **Panic Handling** - Uses `panic-probe` for debugging panics over RTT
+3. **Independent Projects** - Each project manages its own dependencies
+4. **Per-Project Targets** - Each project builds for its specific MCU
+5. **Static Memory** - No heap allocation, uses `static_cell` for static allocations
