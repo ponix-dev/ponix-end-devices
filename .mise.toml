@@ -1,6 +1,10 @@
 [tools]
 rust = "latest"
 
+[env]
+_.file = ".env"
+
+
 [tools."github:probe-rs/probe-rs"]
 version = "latest"
 
